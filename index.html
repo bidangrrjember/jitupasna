@@ -1033,50 +1033,55 @@ async function handleFormSubmit(e) {
             throw new Error("Gagal: Anda hanya dapat meng-upload maksimal 8 file dokumentasi.");
         }
 
-        // KITA KEMBALI MENGGUNAKAN 'FETCH'
-        const response = await fetch(GAS_WEB_APP_URL, {
+        // ===============================================
+        // INI ADALAH PERUBAHAN DARI SOLUSI ANDA
+        // ===============================================
+        await fetch(GAS_WEB_APP_URL, {
             method: 'POST',
-            redirect: 'follow', // <-- TAMBAHKAN INI
+            mode: 'no-cors', // <-- 1. TAMBAHKAN MODE 'no-cors'
             body: JSON.stringify(formData),
             headers: {
-                'Content-Type': 'text/plain;charset=utf-8', // <-- UBAH INI
+                'Content-Type': 'text/plain;charset=utf-8', // <-- 2. TETAP GUNAKAN text/plain
             },
         });
+        // ===============================================
+        // AKHIR PERUBAHAN
+        // ===============================================
 
-        const result = await response.json();
-
-        if (result.status === 'sukses') {
-            showStatus(result.message || 'Data berhasil terkirim!', 'sukses');
-            form.reset();
-            // Reset semua list
-            if(document.getElementById('personilListContainer')) document.getElementById('personilListContainer').innerHTML = '';
-            if(document.getElementById('unsurListContainer')) document.getElementById('unsurListContainer').innerHTML = '';
-            if(document.getElementById('bagianKerusakanListContainer')) document.getElementById('bagianKerusakanListContainer').innerHTML = '';
-            if(document.getElementById('locationStatus')) document.getElementById('locationStatus').innerHTML = ''; 
-            // Update input tersembunyi jadi kosong
-            updateHiddenInputs('personil'); 
-            updateHiddenInputs('unsur');
-            updateHiddenInputs('bagianKerusakan');
+        // KARENA 'no-cors' TIDAK BISA MEMBACA BALASAN,
+        // KITA HARUS BERASUMSI PENGIRIMAN BERHASIL.
+        
+        // Kita tidak bisa lagi memeriksa 'result.status' dari server.
+        // Kita langsung tampilkan sukses dan reset form.
+        showStatus('Data Anda telah dikirim! (Mode: no-cors)', 'sukses');
+        form.reset();
+        
+        // Reset semua list
+        if(document.getElementById('personilListContainer')) document.getElementById('personilListContainer').innerHTML = '';
+        if(document.getElementById('unsurListContainer')) document.getElementById('unsurListContainer').innerHTML = '';
+        if(document.getElementById('bagianKerusakanListContainer')) document.getElementById('bagianKerusakanListContainer').innerHTML = '';
+        if(document.getElementById('locationStatus')) document.getElementById('locationStatus').innerHTML = ''; 
+        // Update input tersembunyi jadi kosong
+        updateHiddenInputs('personil'); 
+        updateHiddenInputs('unsur');
+        updateHiddenInputs('bagianKerusakan');
 
 	    document.querySelectorAll('.kerusakan-fisik-group').forEach(q => {
                         q.style.display = 'none';
                     });
 
-            // Reset dropdown desa
-            const desaSelect = document.getElementById('alamatDesa');
-            if (desaSelect) {
-                desaSelect.innerHTML = '<option value="">Pilih Kecamatan Dulu...</option>';
-                desaSelect.disabled = true;
-            }
-        } else {
-            // Tampilkan error dari server
-            throw new Error(result.message || 'Terjadi kesalahan yang tidak diketahui.');
+        // Reset dropdown desa
+        const desaSelect = document.getElementById('alamatDesa');
+        if (desaSelect) {
+            desaSelect.innerHTML = '<option value="">Pilih Kecamatan Dulu...</option>';
+            desaSelect.disabled = true;
         }
 
     } catch (error) {
-        // Error ini terjadi di sisi browser (HTML/JavaScript) atau dari server
+        // Error ini kemungkinan besar adalah error JARINGAN, 
+        // BUKAN error balasan dari server.
         console.error('Error:', error);
-        showStatus(`Terjadi Gagal: ${error.message}`, 'gagal');
+        showStatus(`Terjadi Gagal (Lokal): ${error.message}`, 'gagal');
     } finally {
         loadingOverlay.style.display = 'none';
         submitButton.disabled = false;
@@ -1189,6 +1194,7 @@ async function handleFormSubmit(e) {
 </body>
 
 </html>
+
 
 
 
