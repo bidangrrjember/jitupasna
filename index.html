@@ -1036,9 +1036,10 @@ async function handleFormSubmit(e) {
         // KITA KEMBALI MENGGUNAKAN 'FETCH'
         const response = await fetch(GAS_WEB_APP_URL, {
             method: 'POST',
+            redirect: 'follow', // <-- TAMBAHKAN INI
             body: JSON.stringify(formData),
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain;charset=utf-8', // <-- UBAH INI
             },
         });
 
@@ -1188,6 +1189,7 @@ async function handleFormSubmit(e) {
 </body>
 
 </html>
+
 
 
 
