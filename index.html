@@ -1,708 +1,559 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulir Asesmen JITUPASNA</title>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    
-    <style>
-        /* --- (BAGIAN CSS UNTUK TAMPILAN) --- */
-        
-        :root {
-            --primary-color: #d9534f;
-            --secondary-color: #007bff; /* Biru untuk tombol lokasi */
-            --light-bg: #fff8f8;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --border-color: #ddd;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
+    <!-- Framework & Ikon yang Sama dengan Dashboard -->
+    <link rel="icon" href="https://bidangrrjember.github.io/peta-bencana-jember/logo-bpbd.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 
+    <!-- Konfigurasi Tailwind (Sama dengan Dashboard) -->
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#007BFF",
+              "background-light": "#F6F7F9",
+              "background-dark": "#121212",
+              "card-light": "#FFFFFF",
+              "card-dark": "#1E1E1E",
+              "text-light": "#333333",
+              "text-dark": "#EAEAEA",
+              "border-light": "#E0E0E0",
+              "border-dark": "#333333"
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.75rem",
+              "lg": "1rem",
+              "xl": "1.5rem"
+            },
+          },
+        },
+      }
+    </script>
+
+    <!-- Style Kustom (Class dari Modal Dashboard Anda) -->
+    <style type="text/tailwindcss">
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+	    @apply select-none;
         }
 
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 30px;
+        .form-card {
+            /* Menerapkan efek frosted glass */
+            @apply bg-card-light/80 dark:bg-card-dark/80 backdrop-blur-md
+                   rounded-lg border border-border-light dark:border-border-dark p-5 shadow-sm;
         }
-
-        form {
-            max-width: 800px;
-            margin: 0 auto;
+        .form-header {
+            @apply text-lg font-semibold text-text-light dark:text-text-dark 
+                   border-b border-border-light dark:border-border-dark pb-3 mb-4;
         }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border-color);
-        }
-
-        .card-header {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-        }
-
         .form-group {
-            margin-bottom: 20px;
+            @apply mb-4;
         }
-
-	.kerusakan-fisik-group {
-    	    display: none; /* Sembunyi by default */
-	}
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
+        .form-label {
+            @apply block text-sm font-medium text-text-light dark:text-text-dark mb-1;
+        }
+        .form-label-note {
+             @apply text-xs text-gray-500 dark:text-gray-400 mt-1 font-normal;
         }
         
-        label.note {
-            font-weight: normal;
-            font-size: 0.85rem;
-            color: #777;
-            margin-top: -5px;
+        .form-button-green {
+             @apply bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors h-10
+                    disabled:opacity-50 disabled:cursor-not-allowed;
         }
-
-        input[type="text"],
-        input[type="number"],
-        input[type="tel"],
-        input[type="file"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            box-sizing: border-box; 
-            font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            background-color: #fff; /* Pastikan background select putih */
+        .form-button-blue {
+             @apply w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white 
+                    font-medium py-2 px-4 rounded-lg transition-colors h-10
+                    disabled:opacity-50 disabled:cursor-not-allowed;
         }
-        
-        /* Style khusus untuk select yang nonaktif */
-        select:disabled {
-            background-color: #f4f4f4;
-            cursor: not-allowed;
-        }
-
-        input[type="file"] {
-            padding: 9px;
-            background: #fdfdfd;
-        }
-
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        input[type="tel"]:focus,
-        input[type="file"]:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.15);
-        }
-        
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        /* CSS Untuk List Builder (Personil/Unsur) */
         .list-builder-container {
-            border: 1px solid #eee;
-            border-radius: 6px;
-            padding: 15px;
-            background: #fdfdfd;
+            @apply border border-border-light dark:border-border-dark rounded-lg p-4 
+                   bg-background-light/50 dark:bg-background-dark/50;
         }
-        
-        .list-builder-controls {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-        }
-        
-        .list-builder-controls select {
-            flex-grow: 1;
-        }
-
-        .add-button {
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 12px 15px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            white-space: nowrap;
-        }
-        
-        .add-button:hover {
-            background-color: #4cae4c;
-        }
-
         .item-list {
-            list-style: none;
-            padding-left: 0;
-            margin-top: 5px; 
-            margin-bottom: 15px;
+            @apply list-none p-0 my-2 space-y-1;
         }
-
         .item-list li {
-            background: #f4f4f4;
-            border: 1px solid #ddd;
-            padding: 8px 12px;
-            border-radius: 4px;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.95rem;
+            @apply bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark 
+                   p-2 rounded-md flex justify-between items-center text-sm;
         }
-
         .remove-item {
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            color: var(--primary-color);
-            background: #fff;
-            border: 1px solid var(--primary-color);
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            line-height: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-            margin-left: 10px;
+            @apply font-bold text-red-500 bg-red-100 dark:bg-red-900 dark:text-red-300 
+                   rounded-full w-5 h-5 flex items-center justify-center cursor-pointer 
+                   hover:bg-red-200 dark:hover:bg-red-800 transition-colors;
         }
-        
-        .remove-item:hover {
-            background-color: var(--primary-color);
-            color: white;
+        .form-loading-overlay {
+            @apply fixed inset-0 bg-background-light/70 dark:bg-background-dark/70 
+                   backdrop-blur-sm z-50 flex flex-col items-center justify-center hidden;
         }
-        
-        .lainnya-input {
-            width: 100%;
-            margin-top: 10px;
-            display: none; 
+        .form-loading-overlay .spinner {
+            @apply w-12 h-12 border-4 border-t-primary border-gray-200 dark:border-gray-700 
+                   rounded-full animate-spin;
         }
-
-        /* Tombol Lokasi */
-        .location-button {
-            width: 100%;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 12px 15px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .location-button:hover:not(:disabled) {
-            background-color: #0056b3;
-        }
-        .location-button:disabled {
-            background-color: #aaa;
-            cursor: not-allowed;
-        }
-        .location-button i {
-            margin-right: 8px;
-        }
-        .location-status-message {
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 10px;
-            font-weight: 500;
-        }
-
-        /* Tombol Submit Utama */
-        .submit-button {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: background-color 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .submit-button:hover:not(:disabled) {
-            background-color: #c9302c;
-        }
-
-        .submit-button:disabled {
-            background-color: #aaa;
-            cursor: not-allowed;
-        }
-
-        /* Overlay */
-        .loading-overlay {
-            display: none; 
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid var(--primary-color);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-
-        .loading-overlay p {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: var(--primary-color);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #statusMessage {
-            margin-top: -15px;
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
+        .kerusakan-fisik-group {
             display: none;
-            text-align: center;
         }
-        
-        #statusMessage.sukses {
-            background-color: #dff0d8;
-            color: #3c763d;
-            border: 1px solid #d6e9c6;
-            display: block;
+        .lainnya-input {
+            display: none; /* Sembunyikan input 'lainnya' by default */
         }
-        
-        #statusMessage.gagal {
-            background-color: #f2dede;
-            color: #a94442;
-            border: 1px solid #ebccd1;
-            display: block;
+
+	/* --- KODE TAMBAHAN UNTUK MEMPERBAIKI TAMPILAN FORM --- */
+        #assessmentForm input[type='text'],
+        #assessmentForm input[type='number'],
+        #assessmentForm input[type='tel'],
+        #assessmentForm select {
+            @apply w-full rounded-lg 
+                   bg-card-light dark:bg-card-dark 
+                   text-text-light dark:text-text-dark
+                   border border-border-light dark:border-border-dark;
         }
+
+	#assessmentForm textarea {
+            @apply w-full rounded-lg 
+                   bg-card-light dark:bg-card-dark 
+                   text-text-light dark:text-text-dark
+                   border border-border-light dark:border-border-dark;
+            min-height: 120px;
+        }
+
+	.form-file-input {
+             @apply block w-full text-sm text-text-light dark:text-text-dark 
+                    border border-border-light dark:border-border-dark 
+                    rounded-lg cursor-pointer bg-card-light dark:bg-card-dark 
+                    focus:outline-none
+                    file:w-32         
+                    file:text-center  
+                    file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 
+                    file:text-sm file:font-medium
+                    file:bg-primary/10 file:text-primary 
+                    dark:file:bg-primary/20 dark:file:text-primary
+                    hover:file:bg-primary/20 dark:hover:file:bg-primary/30;
+        }
+
+        /* --- AKHIR KODE TAMBAHAN --- */	
 
     </style>
 </head>
-<body>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-display">
 
-    <h1>Formulir Asesmen JITUPASNA</h1>
-    <div id="statusMessage"></div>
+    <!-- Header Sederhana + Tombol Dark Mode + Efek Frosted Glass -->
+    <header class="sticky top-0 z-40 backdrop-blur-lg bg-card-light/75 dark:bg-card-dark/75 border-b border-border-light dark:border-border-dark shadow-sm">
+        <div class="p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-primary flex items-center gap-2">
+                <span class="material-symbols-outlined">edit_document</span>
+                Formulir Asesmen JITUPASNA
+            </h1>
+            <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 text-text-light dark:text-text-dark">
+                <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+                <span class="material-symbols-outlined hidden dark:inline">light_mode</span>
+            </button>
+        </div>
+    </header>
 
-    <form id="assessmentForm">
+    <!-- 
+      LAYOUT BARU: 
+      Grid 1 kolom di HP, 3 kolom di desktop (lg)
+      Kolom kiri (lg:col-span-2) untuk form
+      Kolom kanan (lg:col-span-1) untuk file & submit
+    -->
+    <main class="p-4 sm:p-6 md:p-8">
+        <div id="statusMessage" class="hidden p-4 rounded-lg mb-6 text-center font-medium"></div>
+
+        <form id="assessmentForm" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- === KOLOM KIRI (UTAMA) === -->
+            <div class="lg:col-span-2 space-y-6">
+    
+                <div class="form-card">
+                    <div class="form-header">Data Bencana & Terdampak</div>
+                    
+                    <div class="form-group" style="display:none;">
+                        <label for="bencana" class="form-label">Deskripsi Bencana (Internal)</label>
+                        <input type="text" id="bencana" name="bencana" placeholder="Contoh: Tanah Longsor di Dsn. Krajan">
+                    </div>
         
-        <div class="card">
-            <div class="card-header">File Disposisi (Opsional)</div>
-            <div class="form-group">
-                <label for="fileDisposisi">Upload File Disposisi (PDF)</label>
-                <input type="file" id="fileDisposisi" name="fileDisposisi">
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">Data Bencana & Terdampak</div>
+                    <!-- Responsif: 1 kolom di HP, 3 di desktop -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="form-group">
+                            <label for="jenisBencana" class="form-label">Bencana</label>
+                            <select id="jenisBencana" name="jenisBencana">
+                                <option value="">Pilih...</option>
+                                <option value="Angin Kencang">Angin Kencang</option>
+                                <option value="Banjir">Banjir</option>
+                                <option value="Kebakaran">Kebakaran</option>
+                                <option value="Gempa Bumi">Gempa Bumi</option>
+                                <option value="Gunung Meletus">Gunung Meletus</option>
+                                <option value="Tsunami">Tsunami</option>
+                                <option value="Tanah Longsor">Tanah Longsor</option>
+                            </select>
+                        </div>
             
-            <div class="form-group" style="display:none;">
-                <label for="bencana">Deskripsi Bencana (Internal)</label>
-                <input type="text" id="bencana" name="bencana" placeholder="Contoh: Tanah Longsor di Dsn. Krajan">
-            </div>
+                        <div class="form-group">
+                            <label for="sektor" class="form-label">Sektor JITUPASNA</label>
+                            <select id="sektor" name="sektor">
+                                <option value="">Pilih Sektor...</option>
+                                <option value="Perumahan dan Permukiman">Perumahan dan Permukiman</option>
+                                <option value="Infrastruktur Pembangunan">Infrastruktur Pembangunan</option>
+                                <option value="Ekonomi">Ekonomi</option>
+                                <option value="Sosial dan Kemanusiaan">Sosial dan Kemanusiaan</option>
+                                <option value="Lintas Sektor">Lintas Sektor</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subSektor" class="form-label">Sub Sektor</label>
+                            <select id="subSektor" name="subSektor" disabled>
+                                <option value="">Pilih Sektor Dulu...</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <label for="jenisBencana">Bencana</label>
-                <select id="jenisBencana" name="jenisBencana">
-                    <option value="">Pilih...</option>
-                    <option value="Angin Kencang">Angin Kencang</option>
-                    <option value="Banjir">Banjir</option>
-                    <option value="Kebakaran">Kebakaran</option>
-                    <option value="Gempa Bumi">Gempa Bumi</option>
-                    <option value="Gunung Meletus">Gunung Meletus</option>
-                    <option value="Tsunami">Tsunami</option>
-                    <option value="Tanah Longsor">Tanah Longsor</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="sektor">Sektor JITUPASNA</label>
-                <select id="sektor" name="sektor">
-                    <option value="">Pilih...</option>
-                    <option value="Permukiman">Permukiman</option>
-                    <option value="Infrastruktur">Infrastruktur</option>
-                    <option value="Sosial">Sosial</option>
-                    <option value="Ekonomi">Ekonomi</option>
-                    <option value="Lintas Sektor">Lintas Sektor</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="subSektor">Sub Sektor</label>
-                <select id="subSektor" name="subSektor">
-                    <option value="">Pilih...</option>
-                    <option value="Perumahan">Perumahan</option>
-                    <option value="Prasarana Lingkungan">Prasarana Lingkungan</option>
-                    <option value="Transportasi Darat">Transportasi Darat</option>
-                    <option value="Air Bersih dan Sanitasi">Air Bersih dan Sanitasi</option>
-                    <option value="Energi">Energi</option>
-                    <option value="Pos dan Telekomunikasi">Pos dan Telekomunikasi</option>
-                    <option value="Lembaga Sosial">Lembaga Sosial</option>
-                    <option value="Peternakan">Peternakan</option>
-                    <option value="Pertanian">Pertanian</option>
-                    <option value="Perikanan">Perikanan</option>
-                    <option value="Perdagangan">Perdagangan</option>
-                    <option value="Pariwisata">Pariwisata</option>
-                    <option value="Perkebunan">Perkebunan</option>
-                    <option value="Industri Kecil">Industri Kecil</option>
-                    <option value="Industri Menengah">Industri Menengah</option>
-                    <option value="Kesehatan">Kesehatan</option>
-                    <option value="Agama">Agama</option>
-                    <option value="Pendidikan">Pendidikan</option>
-                    <option value="Pemerintahan">Pemerintahan</option>
-                    <option value="Lingkungan Hidup">Lingkungan Hidup</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="namaKK">Nama Kepala Keluarga</label>
-                <input type="text" id="namaKK" name="namaKK" placeholder="Masukkan nama...">
-            </div>
-            <div class="form-group">
-                <label for="jumlahKeluarga">Jumlah Anggota Keluarga</label>
-                <input type="number" id="jumlahKeluarga" name="jumlahKeluarga" placeholder="Masukkan jumlah...">
-            </div>
-            
-            <div class="form-group">
-                <label for="statusRumah">Status Rumah</label>
-                <select id="statusRumah" name="statusRumah">
-                    <option value="">Pilih...</option>
-                    <option value="Milik Sendiri">Milik Sendiri</option>
-                    <option value="Sewa">Sewa</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">Alamat & Lokasi</div>
-            <div class="form-group">
-                <label for="tempatTinggalSementara">Tempat Tinggal Sementara</label>
-                <input type="text" id="tempatTinggalSementara" name="tempatTinggalSementara" placeholder="Contoh: Rumah Kerabat / Pos Pengungsian / ...">
-            </div>
-            <div class="form-group">
-                <label for="jalanDusun">Jalan/Dusun</label>
-                <input type="text" id="jalanDusun" name="jalanDusun" placeholder="Contoh: Dusun Krajan / Jalan Jawa / ...">
-            </div>
-            <div class="form-group">
-                <label for="rt">RT</label>
-                <input type="text" id="rt" name="rt" placeholder="Contoh: 001">
-            </div>
-            <div class="form-group">
-                <label for="rw">RW</label>
-                <input type="text" id="rw" name="rw" placeholder="Contoh: 005">
-            </div>
-
-            <div class="form-group">
-                <label for="alamatKecamatan">Kecamatan</label>
-                <select id="alamatKecamatan" name="alamatKecamatan">
-                    <option value="">Pilih Kecamatan...</option>
-                    </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="alamatDesa">Kelurahan/Desa</label>
-                <select id="alamatDesa" name="alamatDesa" disabled>
-                    <option value="">Pilih Kecamatan Dulu...</option>
-                    </select>
-            </div>
-
-            <div class="form-group">
-                <label for="latitude">Latitude</label>
-                <input type="text" id="latitude" name="latitude" placeholder="Klik tombol di bawah untuk mengisi">
-            </div>
-            <div class="form-group">
-                <label for="longitude">Longitude</label>
-                <input type="text" id="longitude" name="longitude" placeholder="Klik tombol di bawah untuk mengisi">
-            </div>
-            <div class="form-group">
-                <button type="button" id="getLocationBtn" class="location-button">
-                    <i class="fas fa-location-arrow"></i> Deteksi Lokasi
-                </button>
-                <div id="locationStatus" class="location-status-message"></div>
-            </div>
-            <div class="form-group">
-                <label for="nomoryangBisaDihubungi">Nomor yang Bisa Dihubungi</label>
-                <input type="tel" id="nomoryangBisaDihubungi" name="nomoryangBisaDihubungi" placeholder="Contoh: 08123456789">
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">Data Kerusakan</div>
-            <div class="form-group">
-                <label for="ukuranPanjang">Ukuran Kerusakan (Panjang)</label>
-                <label class="note">Dalam satuan meter. Isi angka saja.</label>
-                <input type="number" step="0.1" id="ukuranPanjang" name="ukuranPanjang" placeholder="Contoh: 10,5">
-            </div>
-            <div class="form-group">
-                <label for="ukuranLebar">Ukuran Kerusakan (Lebar)</label>
-                <label class="note">Dalam satuan meter. Isi angka saja.</label>
-                <input type="number" step="0.1" id="ukuranLebar" name="ukuranLebar" placeholder="Contoh: 8">
-            </div>
-            <div class="form-group">
-                <label for="jenisKonstruksi">Jenis Konstruksi</label>
-                <select id="jenisKonstruksi" name="jenisKonstruksi">
-                    <option value="">Pilih...</option>
-                    <option value="Permanen">Permanen</option>
-                    <option value="Semi Permanen">Semi Permanen</option>
-                    <option value="Non Mermanen">Non Permanen</option>
-                </select>
-            </div>
-
-            <div class="form-group list-builder-container">
-                <label for="bagianKerusakanSelect">Bagian yang mengalami kerusakan</label>
-                <ul id="bagianKerusakanListContainer" class="item-list"></ul>
-                <div class="list-builder-controls">
-                    <select id="bagianKerusakanSelect" class="list-builder-select">
-                        <option value="">Pilih bagian...</option>
-                        <option value="Atap">Atap</option>
-                        <option value="Dinding">Dinding</option>
-                        <option value="Lantai">Lantai</option>
-                        <option value="Pondasi">Pondasi</option>
-                    </select>
-                    <button type="button" id="bagianKerusakanButton" class="add-button">Tambahkan</button>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="form-group">
+                            <label for="namaKK" class="form-label">Nama Kepala Keluarga</label>
+                            <input type="text" id="namaKK" name="namaKK" placeholder="Masukkan nama...">
+                        </div>
+                        <div class="form-group">
+                            <label for="jumlahKeluarga" class="form-label">Jumlah Anggota Keluarga</label>
+                            <input type="number" id="jumlahKeluarga" name="jumlahKeluarga" placeholder="Masukkan jumlah...">
+                        </div>
+                        <div class="form-group">
+                            <label for="statusRumah" class="form-label">Status Rumah</label>
+                            <select id="statusRumah" name="statusRumah">
+                                <option value="">Pilih...</option>
+                                <option value="Milik Sendiri">Milik Sendiri</option>
+                                <option value="Sewa">Sewa</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <input type="text" id="bagianKerusakanLainnyaInput" class="lainnya-input" placeholder="Ketik bagian lainnya...">
-                <input type="hidden" id="bagianKerusakan" name="bagianKerusakan">
-            </div>
+        
+                <div class="form-card">
+                    <div class="form-header">Alamat & Lokasi</div>
+                    <div class="form-group">
+                        <label for="tempatTinggalSementara" class="form-label">Tempat Tinggal Sementara</label>
+                        <input type="text" id="tempatTinggalSementara" name="tempatTinggalSementara" placeholder="Contoh: Rumah Kerabat / Pos Pengungsian / ...">
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="form-group">
+                            <label for="jalanDusun" class="form-label">Jalan/Dusun</label>
+                            <input type="text" id="jalanDusun" name="jalanDusun" placeholder="Contoh: Dusun Krajan">
+                        </div>
+                        <div class="form-group">
+                            <label for="rt" class="form-label">RT</label>
+                            <input type="text" id="rt" name="rt" placeholder="Contoh: 001">
+                        </div>
+                        <div class="form-group">
+                            <label for="rw" class="form-label">RW</label>
+                            <input type="text" id="rw" name="rw" placeholder="Contoh: 005">
+                        </div>
+                    </div>
+        
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="alamatKecamatan" class="form-label">Kecamatan</label>
+                            <select id="alamatKecamatan" name="alamatKecamatan">
+                                <option value="">Pilih Kecamatan...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="alamatDesa" class="form-label">Kelurahan/Desa</label>
+                            <select id="alamatDesa" name="alamatDesa" disabled>
+                                <option value="">Pilih Kecamatan Dulu...</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="form-group kerusakan-fisik-group" data-category="Pondasi">
-                <label for="kerusakanPondasi">Kerusakan Fisik Pondasi</label>
-                <select id="kerusakanPondasi" name="kerusakanPondasi">
-                    <option value="">Pilih...</option>
-                    <option value="Retakan sangat jelas namun tidak tembus sampai tulang beton (6%)">Retakan sangat jelas namun tidak tembus sampai tulang beton (6%)</option>
-                    <option value="Kehancuran beton yang sangat nyata dengan tulangan beton terlihat (6%)">Kehancuran beton yang sangat nyata dengan tulangan beton terlihat (6%)</option>
-                    <option value="Penurunan dan atau Kemiringan lantai dapat terlihat (8%)">Penurunan dan atau Kemiringan lantai dapat terlihat (8%)</option>
-                    <option value="Pondasi hancur dan atau tidak bisa diperbaiki (10%)">Pondasi hancur dan atau tidak bisa diperbaiki (10%)</option>
-                </select>
-            </div>
-            
-            <div class="form-group kerusakan-fisik-group" data-category="Dinding">
-                <label for="kerusakanRangkaStruktur">Kerusakan Fisik Rangka Struktur (Kolom/Balok)</label>
-                <select id="kerusakanRangkaStruktur" name="kerusakanRangkaStruktur">
-                    <option value="">Pilih...</option>
-                    <option value="Retakan yang sangat jelas namun tidak tembus sampai tulangan beton (10%)">Retakan yang sangat jelas namun tidak tembus sampai tulangan beton (10%)</option>
-                    <option value="Kehancuran beton yang sangat nyata dengan tulangan beton terlihat (10%)">Kehancuran beton yang sangat nyata dengan tulangan beton terlihat (10%)</option>
-                    <option value="Tulangan tertekuk (15%)">Tulangan tertekuk (15%)</option>
-                    <option value="Deformasi vertikal/miring pada kolom dapat terlihat (25%)">Deformasi vertikal/miring pada kolom dapat terlihat (25%)</option>
-                    <option value="Rangka struktur kayu rusak/roboh (25%)">Rangka struktur kayu rusak/roboh (25%)</option>
-                </select>
-            </div>
-            
-            <div class="form-group kerusakan-fisik-group" data-category="Atap">
-                <label for="kerusakanRangkaAtap">Kerusakan Fisik Rangka Atap/Kuda-Kuda</label>
-                <select id="kerusakanRangkaAtap" name="kerusakanRangkaAtap">
-                    <option value="">Pilih...</option>
-                    <option value="Reng dan/atau usuk hancur sebagian atau seluruh (10%)">Reng dan/atau usuk hancur sebagian atau seluruh (10%)</option>
-                    <option value="Kuda-kuda roboh sebagian atau seluruh (25%)">Kuda-kuda roboh sebagian atau seluruh (25%)</option>
-                </select>
-            </div>
-
-            <div class="form-group kerusakan-fisik-group" data-category="Atap">
-                <label for="kerusakanPenutupAtap">Kerusakan Penutup Atap/Genteng</label>
-                <select id="kerusakanPenutupAtap" name="kerusakanPenutupAtap">
-                    <option value="">Pilih...</option>
-                    <option value="Berjatuhan menyebar sebagian atau seluruh (5%)">Berjatuhan menyebar sebagian atau seluruh (5%)</option>
-                </select>
-            </div>
-
-            <div class="form-group kerusakan-fisik-group" data-category="Atap">
-                <label for="kerusakanLangit">Kerusakan Fisik Langit-Langit/Plafon</label>
-                <select id="kerusakanLangit" name="kerusakanLangit">
-                    <option value="">Pilih...</option>
-                    <option value="Langit-langit terlepas/jatuh menyebar sebagian atau seluruh (5%)">Langit-langit terlepas/jatuh menyebar sebagian atau seluruh (5%)</option>
-                    <option value="Langit-langit terlepas/jatuh dan rangka langit-langit rusak menyebar sebagian atau seluruh (5%)">Langit-langit terlepas/jatuh dan rangka langit-langit rusak menyebar sebagian atau seluruh (5%)</option>
-                </select>
-            </div>
-
-            <div class="form-group kerusakan-fisik-group" data-category="Dinding">
-                <label for="kerusakanDinding">Kerusakan Fisik Dinding</label>
-                <select id="kerusakanDinding" name="kerusakanDinding">
-                    <option value="">Pilih...</option>
-                    <option value="Plesteran terkelupas (10%)">Plesteran terkelupas (10%)</option>
-                    <option value="Retakan dapat terlihat jelas, tembus pada pasangan batu (10%)">Retakan dapat terlihat jelas, tembus pada pasangan batu (10%)</option>
-                    <option value="Dinding mengalami displacement horizontal/iring (17%)">Dinding mengalami displacement horizontal/iring (17%)</option>
-                    <option value="Dinding jatuh sebagian atau menyeluruh (25%)">Dinding jatuh sebagian atau menyeluruh (25%)</option>
-                    <option value="Dinding partisi/sesek rusak sebagian/menyeluruh (25%)">Dinding partisi/sesek rusak sebagian/menyeluruh (25%)</option>
-                </select>
-            </div>
-
-            <div class="form-group kerusakan-fisik-group" data-category="Lantai">
-                <label for="kerusakanLantai">Kerusakan Fisik Lantai</label>
-                <select id="kerusakanLantai" name="kerusakanLantai">
-                    <option value="">Pilih...</option>
-                    <option value="Retak dan/atau hancur menyebar sebagian atau seluruh (5%)">Retak dan/atau hancur menyebar sebagian atau seluruh (5%)</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="nilaiKerugian">Nilai Kerugian</label>
-                <label class="note">Isi angka saja. Contoh: 5000000</label>
-                <input type="number" id="nilaiKerugian" name="nilaiKerugian" placeholder="Estimasi nilai rupiah...">
-            </div>
-
-            <div class="form-group">
-                <label for="pengkajianDampak">Pengkajian Dampak</label>
-                <textarea id="pengkajianDampak" name="pengkajianDampak" placeholder="Deskripsikan dampak yang terjadi..."></textarea>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">Bantuan yang Diajukan untuk Diserahkan</div>
-            <label class="note">Tulis jumlahnya saja (angka).</label>
-            <div class="form-group">
-                <label for="semen">Semen</label>
-                <input type="number" id="semen" name="semen" placeholder="Jumlah...">
-            </div>
-            <div class="form-group">
-                <label for="batuBata">Batu Bata</label>
-                <input type="number" id="batuBata" name="batuBata" placeholder="Jumlah...">
-            </div>
-            <div class="form-group">
-                <label for="genteng">Genteng</label>
-                <input type="number" id="genteng" name="genteng" placeholder="Jumlah...">
-            </div>
-            <div class="form-group">
-                <label for="kalsiboard">Kalsiboard</label>
-                <input type="number" id="kalsiboard" name="kalsiboard" placeholder="Jumlah...">
-            </div>
-            <div class="form-group">
-                <label for="kayuBalok">Kayu Balok</label>
-                <input type="number" id="kayuBalok" name="kayuBalok" placeholder="Jumlah...">
-            </div>
-            <div class="form-group">
-                <label for="kayuUsuk">Kayu Usuk</label>
-                <input type="number" id="kayuUsuk" name="kayuUsuk" placeholder="Jumlah...">
-            </div>
-            <div class="form-group">
-                <label for="kayuReng">Kayu Reng</label>
-                <input type="number" id="kayuReng" name="kayuReng" placeholder="Jumlah...">
-            </div>
-            
-            <div class="form-group">
-                <label for="besi6mm">Besi ፀ 6 m</label>
-                <input type="number" id="besi6mm" name="besi6mm" placeholder="Jumlah...">
-            </div>
-            <div class="form-group">
-                <label for="besi10mm">Besi ፀ 10 mm</label>
-                <input type="number" id="besi10mm" name="besi10mm" placeholder="Jumlah...">
-            </div>
-
-            <div class="form-group">
-                <label for="terpal3x4">Terpal 3 × 4m</label>
-                <input type="number" id="terpal3x4" name="terpal3x4" placeholder="Jumlah...">
-            </div>
-            <div class="form-group">
-                <label for="terpal5x6">Terpal 5 × 6m</label>
-                <input type="number" id="terpal5x6" name="terpal5x6" placeholder="Jumlah...">
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">Personil & Unsur Terlibat</div>
-            
-            <div class="form-group list-builder-container">
-                <label for="personilSelect">Personil yang Berangkat</label>
-                <ul id="personilListContainer" class="item-list"></ul>
-                <div class="list-builder-controls">
-                    <select id="personilSelect" class="list-builder-select">
-                        <option value="">Pilih personil...</option>
-                        <option value="Ir. Anang Dwi Resdianto, S.T., M.M., M.T.">Ir. Anang Dwi Resdianto, S.T., M.M., M.T.</option>
-                        <option value="Raden Waloejo Djati, S.T.">Raden Waloejo Djati, S.T.</option>
-                        <option value="Anton">Anton</option>
-                        <option value="Cahyani Wulandari, S.T.">Cahyani Wulandari, S.T.</option>
-                        <option value="Yangga Purnagusti, S.T.">Yangga Purnagusti, S.T.</option>
-                        <option value="Muhammad Qoidul Umam, S.T.">Muhammad Qoidul Umam, S.T.</option>
-                        <option value="Risky Rena Anggia Sari, S.T.">Risky Rena Anggia Sari, S.T.</option>
-                        <option value="Deliana Aristantia, S.Pd.">Deliana Aristantia, S.Pd.</option>
-                        <option value="Ali Maskur Bakri">Ali Maskur Bakri</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
-                    <button type="button" id="personilButton" class="add-button">Tambahkan</button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="latitude" class="form-label">Latitude</label>
+                            <input type="text" id="latitude" name="latitude" placeholder="Klik tombol di bawah">
+                        </div>
+                        <div class="form-group">
+                            <label for="longitude" class="form-label">Longitude</label>
+                            <input type="text" id="longitude" name="longitude" placeholder="Klik tombol di bawah">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" id="getLocationBtn" class="form-button-blue">
+                            <span class="material-symbols-outlined">location_searching</span> Deteksi Lokasi
+                        </button>
+                        <div id="locationStatus" class="text-sm text-center mt-2 text-gray-600 dark:text-gray-400"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomoryangBisaDihubungi" class="form-label">Nomor yang Bisa Dihubungi</label>
+                        <input type="tel" id="nomoryangBisaDihubungi" name="nomoryangBisaDihubungi" placeholder="Contoh: 08123456789">
+                    </div>
                 </div>
-                <input type="text" id="personilLainnyaInput" class="lainnya-input" placeholder="Ketik nama personil lainnya...">
-                <input type="hidden" id="personilyangBerangkat" name="personilyangBerangkat">
-                <input type="hidden" id="personilLainnya" name="personilLainnya">
-            </div>
-
-            <div class="form-group list-builder-container">
-                <label for="unsurSelect">Unsur yang Terlibat</label>
-                <ul id="unsurListContainer" class="item-list"></ul>
-                <div class="list-builder-controls">
-                    <select id="unsurSelect" class="list-builder-select">
-                        <option value="">Pilih unsur...</option>
-                        <option value="BPBD Kabupaten Jember">BPBD Kabupaten Jember</option>
-                        <option value="Perangkat Kelurahan/Desa">Perangkat Kelurahan/Desa</option>
-                        <option value="TNI/POLRI">TNI/POLRI</option>
-                        <option value="Warga">Warga</option>
-                        <option value="Relawan">Relawan</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
-                    <button type="button" id="unsurButton" class="add-button">Tambahkan</button>
+                
+                <div class="form-card">
+                    <div class="form-header">Data Kerusakan</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="ukuranPanjang" class="form-label">Ukuran Kerusakan (Panjang)</label>
+                            <label class="form-label-note">Dalam satuan meter. Isi angka saja.</label>
+                            <input type="number" step="0.1" id="ukuranPanjang" name="ukuranPanjang" placeholder="Contoh: 10,5">
+                        </div>
+                        <div class="form-group">
+                            <label for="ukuranLebar" class="form-label">Ukuran Kerusakan (Lebar)</label>
+                            <label class="form-label-note">Dalam satuan meter. Isi angka saja.</label>
+                            <input type="number" step="0.1" id="ukuranLebar" name="ukuranLebar" placeholder="Contoh: 8">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="jenisKonstruksi" class="form-label">Jenis Konstruksi</label>
+                        <select id="jenisKonstruksi" name="jenisKonstruksi">
+                            <option value="">Pilih...</option>
+                            <option value="Permanen">Permanen</option>
+                            <option value="Semi Permanen">Semi Permanen</option>
+                            <option value="Non Mermanen">Non Permanen</option>
+                        </select>
+                    </div>
+        
+                    <div class="form-group list-builder-container">
+                        <label for="bagianKerusakanSelect" class="form-label">Bagian yang mengalami kerusakan</label>
+                        <ul id="bagianKerusakanListContainer" class="item-list"></ul>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <select id="bagianKerusakanSelect" class="flex-1">
+                                <option value="">Pilih bagian...</option>
+                                <option value="Atap">Atap</option>
+                                <option value="Dinding">Dinding</option>
+                                <option value="Lantai">Lantai</option>
+                                <option value="Pondasi">Pondasi</option>
+                            </select>
+                            <button type="button" id="bagianKerusakanButton" class="form-button-green">Tambah</button>
+                        </div>
+                        <input type="text" id="bagianKerusakanLainnyaInput" class="lainnya-input mt-2" placeholder="Ketik bagian lainnya...">
+                        <input type="hidden" id="bagianKerusakan" name="bagianKerusakan">
+                    </div>
+        
+                    <!-- (Semua grup kerusakan fisik) -->
+                    <div class="form-group kerusakan-fisik-group" data-category="Pondasi">
+                        <label for="kerusakanPondasi" class="form-label">Kerusakan Fisik Pondasi</label>
+                        <select id="kerusakanPondasi" name="kerusakanPondasi">
+                            <option value="">Pilih...</option>
+                            <option value="Retakan sangat jelas namun tidak tembus sampai tulang beton (6%)">Retakan sangat jelas namun tidak tembus sampai tulang beton (6%)</option>
+                            <option value="Kehancuran beton yang sangat nyata dengan tulangan beton terlihat (6%)">Kehancuran beton yang sangat nyata dengan tulangan beton terlihat (6%)</option>
+                            <option value="Penurunan dan atau Kemiringan lantai dapat terlihat (8%)">Penurunan dan atau Kemiringan lantai dapat terlihat (8%)</option>
+                            <option value="Pondasi hancur dan atau tidak bisa diperbaiki (10%)">Pondasi hancur dan atau tidak bisa diperbaiki (10%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group kerusakan-fisik-group" data-category="Dinding">
+                        <label for="kerusakanRangkaStruktur" class="form-label">Kerusakan Fisik Rangka Struktur (Kolom/Balok)</label>
+                        <select id="kerusakanRangkaStruktur" name="kerusakanRangkaStruktur">
+                            <option value="">Pilih...</option>
+                            <option value="Retakan yang sangat jelas namun tidak tembus sampai tulangan beton (10%)">Retakan yang sangat jelas namun tidak tembus sampai tulangan beton (10%)</option>
+                            <option value="Kehancuran beton yang sangat nyata dengan tulangan beton terlihat (10%)">Kehancuran beton yang sangat nyata dengan tulangan beton terlihat (10%)</option>
+                            <option value="Tulangan tertekuk (15%)">Tulangan tertekuk (15%)</option>
+                            <option value="Deformasi vertikal/miring pada kolom dapat terlihat (25%)">Deformasi vertikal/miring pada kolom dapat terlihat (25%)</option>
+                            <option value="Rangka struktur kayu rusak/roboh (25%)">Rangka struktur kayu rusak/roboh (25%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group kerusakan-fisik-group" data-category="Atap">
+                        <label for="kerusakanRangkaAtap" class="form-label">Kerusakan Fisik Rangka Atap/Kuda-Kuda</label>
+                        <select id="kerusakanRangkaAtap" name="kerusakanRangkaAtap">
+                            <option value="">Pilih...</option>
+                            <option value="Reng dan/atau usuk hancur sebagian atau seluruh (10%)">Reng dan/atau usuk hancur sebagian atau seluruh (10%)</option>
+                            <option value="Kuda-kuda roboh sebagian atau seluruh (25%)">Kuda-kuda roboh sebagian atau seluruh (25%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group kerusakan-fisik-group" data-category="Atap">
+                        <label for="kerusakanPenutupAtap" class="form-label">Kerusakan Penutup Atap/Genteng</label>
+                        <select id="kerusakanPenutupAtap" name="kerusakanPenutupAtap">
+                            <option value="">Pilih...</option>
+                            <option value="Berjatuhan menyebar sebagian atau seluruh (5%)">Berjatuhan menyebar sebagian atau seluruh (5%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group kerusakan-fisik-group" data-category="Atap">
+                        <label for="kerusakanLangit" class="form-label">Kerusakan Fisik Langit-Langit/Plafon</label>
+                        <select id="kerusakanLangit" name="kerusakanLangit">
+                            <option value="">Pilih...</option>
+                            <option value="Langit-langit terlepas/jatuh menyebar sebagian atau seluruh (5%)">Langit-langit terlepas/jatuh menyebar sebagian atau seluruh (5%)</option>
+                            <option value="Langit-langit terlepas/jatuh dan rangka langit-langit rusak menyebar sebagian atau seluruh (5%)">Langit-langit terlepas/jatuh dan rangka langit-langit rusak menyebar sebagian atau seluruh (5%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group kerusakan-fisik-group" data-category="Dinding">
+                        <label for="kerusakanDinding" class="form-label">Kerusakan Fisik Dinding</label>
+                        <select id="kerusakanDinding" name="kerusakanDinding">
+                            <option value="">Pilih...</option>
+                            <option value="Plesteran terkelupas (10%)">Plesteran terkelupas (10%)</option>
+                            <option value="Retakan dapat terlihat jelas, tembus pada pasangan batu (10%)">Retakan dapat terlihat jelas, tembus pada pasangan batu (10%)</option>
+                            <option value="Dinding mengalami displacement horizontal/iring (17%)">Dinding mengalami displacement horizontal/iring (17%)</option>
+                            <option value="Dinding jatuh sebagian atau menyeluruh (25%)">Dinding jatuh sebagian atau menyeluruh (25%)</option>
+                            <option value="Dinding partisi/sesek rusak sebagian/menyeluruh (25%)">Dinding partisi/sesek rusak sebagian/menyeluruh (25%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group kerusakan-fisik-group" data-category="Lantai">
+                        <label for="kerusakanLantai" class="form-label">Kerusakan Fisik Lantai</label>
+                        <select id="kerusakanLantai" name="kerusakanLantai">
+                            <option value="">Pilih...</option>
+                            <option value="Retak dan/atau hancur menyebar sebagian atau seluruh (5%)">Retak dan/atau hancur menyebar sebagian atau seluruh (5%)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1">
+                    <div class="form-group">
+                        <label for="nilaiKerugian" class="form-label">Nilai Kerugian</label>
+                        <label class="form-label-note">Isi angka saja. Contoh: 5000000</label>
+                        <input type="number" id="nilaiKerugian" name="nilaiKerugian" placeholder="Estimasi nilai rupiah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="pengkajianDampak" class="form-label">Pengkajian Dampak</label>
+                        <textarea id="pengkajianDampak" name="pengkajianDampak" placeholder="Deskripsikan dampak yang terjadi..."></textarea>
+                    </div>
                 </div>
-                <input type="text" id="unsurLainnyaInput" class="lainnya-input" placeholder="Ketik unsur lainnya...">
-                <input type="hidden" id="unsuryangTerlibat" name="unsuryangTerlibat">
-                <input type="hidden" id="unsurLainnya" name="unsurLainnya">
+                </div>
+        
+                <div class="form-card">
+                <div class="form-header">Bantuan yang Diajukan untuk Diserahkan</div>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4">
+                    <div class="form-group">
+                        <label for="semen" class="form-label">Semen</label>
+                        <input type="number" id="semen" name="semen" placeholder="Jumlah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="batuBata" class="form-label">Batu Bata</label>
+                        <input type="number" id="batuBata" name="batuBata" placeholder="Jumlah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="genteng" class="form-label">Genteng</label>
+                        <input type="number" id="genteng" name="genteng" placeholder="Jumlah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="kalsiboard" class="form-label">Kalsiboard</label>
+                        <input type="number" id="kalsiboard" name="kalsiboard" placeholder="Jumlah...">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4">
+                    <div class="form-group">
+                        <label for="kayuBalok" class="form-label">Kayu Balok</label>
+                        <input type="number" id="kayuBalok" name="kayuBalok" placeholder="Jumlah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="kayuUsuk" class="form-label">Kayu Usuk</label>
+                        <input type="number" id="kayuUsuk" name="kayuUsuk" placeholder="Jumlah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="kayuReng" class="form-label">Kayu Reng</label>
+                        <input type="number" id="kayuReng" name="kayuReng" placeholder="Jumlah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="besi6mm" class="form-label">Besi ø 6 mm</label>
+                        <input type="number" id="besi6mm" name="besi6mm" placeholder="Jumlah...">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4">
+                    <div class="form-group">
+                        <label for="besi10mm" class="form-label">Besi ø 10 mm</label>
+                        <input type="number" id="besi10mm" name="besi10mm" placeholder="Jumlah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="terpal3x4" class="form-label">Terpal 3x4m</label>
+                        <input type="number" id="terpal3x4" name="terpal3x4" placeholder="Jumlah...">
+                    </div>
+                    <div class="form-group">
+                        <label for="terpal5x6" class="form-label">Terpal 5x6m</label>
+                        <input type="number" id="terpal5x6" name="terpal5x6" placeholder="Jumlah...">
+                    </div>
+                    </div>
             </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">Dokumentasi (Opsional)</div>
-            <div class="form-group">
-                <label for="filesDokumentasi">Upload Foto Dokumentasi (Bisa lebih dari 1, maks 8 foto)</label>
-                <input type="file" id="filesDokumentasi" name="filesDokumentasi" multiple accept="image/*,.jpeg,.jpg,.png">
             </div>
-        </div>
 
-        <button type="submit" id="submitButton" class="submit-button">Kirim Laporan</button>
+            <!-- === KOLOM KANAN (STICKY) === -->
+            <!-- 'top-24' (6rem) adalah untuk spasi di bawah header sticky -->
+            <div class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 self-start">
+        
+                <div class="form-card">
+                    <div class="form-header">Personil & Unsur Terlibat</div>
+                    
+                    <div class="form-group list-builder-container">
+                        <label for="personilSelect" class="form-label">Personil yang Berangkat</label>
+                        <ul id="personilListContainer" class="item-list"></ul>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <select id="personilSelect" class="flex-1">
+                                <option value="">Pilih personil...</option>
+                                <option value="Ir. Anang Dwi Resdianto, S.T., M.M., M.T.">Ir. Anang Dwi Resdianto, S.T., M.M., M.T.</option>
+                                <option value="Raden Waloejo Djati, S.T.">Raden Waloejo Djati, S.T.</option>
+                                <option value="Anton">Anton</option>
+                                <option value="Cahyani Wulandari, S.T.">Cahyani Wulandari, S.T.</option>
+                                <option value="Yangga Purnagusti, S.T.">Yangga Purnagusti, S.T.</option>
+                                <option value="Muhammad Qoidul Umam, S.T.">Muhammad Qoidul Umam, S.T.</option>
+                                <option value="Risky Rena Anggia Sari, S.T.">Risky Rena Anggia Sari, S.T.</option>
+                                <option value="Deliana Aristantia, S.Pd.">Deliana Aristantia, S.Pd.</option>
+                                <option value="Ali Maskur Bakri">Ali Maskur Bakri</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                            <button type="button" id="personilButton" class="form-button-green">Tambah</button>
+                        </div>
+                        <input type="text" id="personilLainnyaInput" class="lainnya-input mt-2" placeholder="Ketik nama personil lainnya...">
+                        <input type="hidden" id="personilyangBerangkat" name="personilyangBerangkat">
+                        <input type="hidden" id="personilLainnya" name="personilLainnya">
+                    </div>
+        
+                    <div class="form-group list-builder-container">
+                        <label for="unsurSelect" class="form-label">Unsur yang Terlibat</label>
+                        <ul id="unsurListContainer" class="item-list"></ul>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <select id="unsurSelect" class="flex-1">
+                                <option value="">Pilih unsur...</option>
+                                <option value="BPBD Kabupaten Jember">BPBD Kabupaten Jember</option>
+                                <option value="Perangkat Kelurahan/Desa">Perangkat Kelurahan/Desa</option>
+                                <option value="TNI/POLRI">TNI/POLRI</option>
+                                <option value="Warga">Warga</option>
+                                <option value="Relawan">Relawan</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                            <button type="button" id="unsurButton" class="form-button-green">Tambah</button>
+                        </div>
+                        <input type="text" id="unsurLainnyaInput" class="lainnya-input mt-2" placeholder="Ketik unsur lainnya...">
+                        <input type="hidden" id="unsuryangTerlibat" name="unsuryangTerlibat">
+                        <input type="hidden" id="unsurLainnya" name="unsurLainnya">
+                    </div>
+                </div>
 
-    </form>
+                <div class="form-card">
+                    <div class="form-header">Upload File</div>
+                    
+                    <div class="form-group">
+                        <label for="fileDisposisi" class="form-label">File Disposisi (Opsional)</label>
+                        <input type="file" id="fileDisposisi" name="fileDisposisi" accept=".pdf" class="form-file-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="filesDokumentasi" class="form-label">Dokumentasi (Maks 8 foto)</label>
+                        <input type="file" id="filesDokumentasi" name="filesDokumentasi" multiple accept="image/*,.jpeg,.jpg,.png" class="form-file-input">
+                    </div>
+                </div>
 
-    <div class="loading-overlay" id="loadingOverlay">
+                <div class="form-card">
+                    <div class="form-header">Kirim Laporan</div>
+                    <p class="form-label-note mb-4">Pastikan semua data sudah benar sebelum mengirimkan laporan asesmen.</p>
+                    <button type="submit" id="submitButton" class="w-full py-3 px-6 rounded-lg bg-primary text-white text-lg font-medium hover:bg-primary/90 disabled:bg-gray-400">
+                        Kirim Laporan
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- Loading Overlay (di luar form, di body) -->
+    <div id="loadingOverlay" class="form-loading-overlay">
         <div class="spinner"></div>
-        <p>Mengirim data dan mengupload file... <br>Harap tunggu, ini mungkin perlu waktu beberapa saat.</p>
+        <p class="mt-4 text-lg font-medium text-text-light dark:text-text-dark">Mengirim data dan file...</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Harap tunggu, ini mungkin perlu waktu.</p>
     </div>
 
 
@@ -710,7 +561,7 @@
         // -----------------------------------------------------------------
         // (WAJIB) GANTI DENGAN URL WEB APP ANDA
         // -----------------------------------------------------------------
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8RWzmJt03m6uJrDVxm6CZTiHlqOx_nrL9YsvhFeg8Uk41Yqph_zVDJ6XYXQHAKoav/exec"; // <-- GANTI INI
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby_g8FExlZMnXvPbZm0oBKXo7VVnyvDtpcQDQ6sLd59vsqjw2LLyzCuZvJ_pIPXvL1z/exec"; // <-- GANTI INI
 
 
         // --- Variabel Global ---
@@ -719,87 +570,116 @@
         const loadingOverlay = document.getElementById('loadingOverlay');
         const statusMessage = document.getElementById('statusMessage');
 
+        // --- Dark Mode Toggle ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+        });
 
-        // ========================================================
-        // JAVASCRIPT BARU UNTUK DROPDOWN KECAMATAN/DESA
-        // ========================================================
-        
-        // Data diambil dari file PDF yang Anda berikan [cite: 5, 6, 7, 8, 9, 10, 11]
-        const dataJember = {
-            "Ajung": ["Ajung", "Klompangan", "Mangaran", "Pancakarya", "Rowoindah", "Sukamakmur", "Wirowongso"],
-            "Ambulu": ["Ambulu", "Andongsari", "Karang Anyar", "Pontang", "Sabrang", "Sumberejo", "Tegalsari"],
-            "Arjasa": ["Arjasa", "Biting", "Candijati", "Darsono", "Kamal", "Kemuning Lor"],
-            "Bangsalsari": ["Badean", "Bangsalsari", "Banjarsari", "Curahkalong", "Gambirono", "Karangsono", "Langkap", "Petung", "Sukorejo", "Tisnogambar", "Tugusari"],
-            "Balung": ["Balung Kidul", "Balung Kulon", "Balung Lor", "Curahlele", "Gumelar", "Karangduren", "Karang Semanding", "Tutul"],
-            "Gumukmas": ["Bagorejo", "Gumukmas", "Karangrejo", "Kepanjen", "Mayangan", "Menampu", "Purwoasri", "Tembokrejo"],
-            "Jelbuk": ["Jelbuk", "Panduman", "Sucopangepok", "Sugerkidul", "Sukojember", "Sukowiryo"],
-            "Jenggawah": ["Jatisari", "Jenggawah", "Kemuningsari Kidul", "Cangkring", "Jatimulyo", "Kertonegoro", "Sruni", "Wonojati"],
-            "Jombang": ["Jombang", "Keting", "Ngampelrejo", "Padomasan", "Sarimulyo", "Wringinagung"],
-            "Kalisat": ["Ajung", "Gambiran", "Glagahwero", "Gumuksari", "Kalisat", "Patempuran", "Plalangan", "Sebanen", "Sukoreno", "Sumberjeruk", "Sumberkalong", "Sumberketempa"],
-            "Kaliwates": ["Jember Kidul", "Kaliwates", "Kebon Agung", "Kepatihan", "Mangli", "Sempusari", "Tegal Besar"],
-            "Kencong": ["Cakru", "Kencong", "Kraton", "Paseban", "Wonorejo"],
-            "Ledokombo": ["Karangpaiton", "Ledokombo", "Lembengan", "Slateng", "Sukogidri", "Sumberanget", "Sumberbulus", "Sumberlesung", "Sumbersalak", "Suren"],
-            "Mayang": ["Mayang", "Mrawan", "Seputih", "Sidomukti", "Sumberkejayan", "Tegalwaru", "Tegalrejo"],
-            "Mumbulsari": ["Karang Kedawung", "Kawangrejo", "Lampeji", "Lengkong", "Mumbulsari", "Suco", "Tamansari"],
-            "Panti": ["Glagahwero", "Kemiri", "Kemuningsari Lor", "Pakis", "Panti", "Serut", "Suci"],
-            "Pakusari": ["Bedadung", "Jatian", "Kertosari", "Pakusari", "Patemon", "Subo", "Sumberpinang"],
-            "Patrang": ["Banjarsengon", "Baratan", "Bintoro", "Gebang", "Jemberlor", "Jumerto", "Patrang", "Slawu"],
-            "Puger": ["Bagon", "Grenden", "Jambearum", "Kasiyan", "Kasiyan Timur", "Mlokorejo", "Mojomulyo", "Mojosari", "Puger Kulon", "Puger Wetan", "Wonosari", "Wringintelu"],
-            "Rambipuji": ["Curahmalang", "Gugut", "Kaliwining", "Nogosari", "Pecoro", "Rambigundam", "Rambipuji", "Rowotamtu"],
-            "Semboro": ["Pondokdalem", "Pondokjoyo", "Rejoagung", "Semboro", "Sidomekar", "Sidomulyo"],
-            "Silo": ["Garahan", "Harjomulyo", "Karangharjo", "Mulyorejo", "Pace", "Sempolan", "Sidomulyo", "Silo", "Sumberjati"],
-            "Sukorambi": ["Dukuhmencek", "Jubung", "Karangpring", "Klungkung", "Sukorambi"],
-            "Sukowono": ["Arjasa", "Balet Baru", "Dawuhanmangli", "Mojogemi", "Pocangan", "Sukokerto", "Sukorejo", "Sukosari", "Sukowono", "Sumberwringin", "Sumberdanti", "Sumberwaru"],
-            "Sumberbaru": ["Gelang", "Jambesari", "Jamintoro", "Jatiroto", "Kaliglagah", "Karangbayat", "Pringgowirawan", "Rowotengah", "Sumberagung", "Yosorati"],
-            "Sumberjambe": ["Cumedak", "Gunungmalang", "Jambearum", "Plerean", "Pringgondani", "Randuagung", "Rowosari", "Sumberjambe", "Sumberpakem"],
-            "Sumbersari": ["Antirogo", "Karangrejo", "Kebonsari", "Kranjingan", "Sumbersari", "Tegalgede", "Wirolegi"],
-            "Tanggul": ["Darungan", "Klatakan", "Kramat Sukoharjo", "Manggisan", "Patemon", "Selodakon", "Tanggul Kulon", "Tanggul Wetan"],
-            "Tempurejo": ["Andongrejo", "Curahnongko", "Curahtakir", "Pondokrejo", "Sidodadi", "Sanenrejo", "Tempurejo", "Wonoasri"],
-            "Umbulsari": ["Gadingrejo", "Gunungsari", "Mundurejo", "Paleran", "Sidorejo", "Sukoreno", "Tanjungsari", "Tegalwangi", "Umbulrejo", "Umbulsari"],
-            "Wuluhan": ["Ampel", "Dukuhdempok", "Glundengan", "Kesilir", "Lojejer", "Tamansari", "Tanjungrejo"]
-        };
-
-        // Menjalankan fungsi ini saat halaman selesai dimuat
+        // --- Menggabungkan SEMUA skrip ke dalam SATU DOMContentLoaded ---
         document.addEventListener('DOMContentLoaded', () => {
+            
+            // ===========================================
+            // DROPDOWN KECAMATAN/DESA
+            // ===========================================
+            const dataJember = {
+                "Ajung": ["Ajung", "Klompangan", "Mangaran", "Pancakarya", "Rowoindah", "Sukamakmur", "Wirowongso"],
+                "Ambulu": ["Ambulu", "Andongsari", "Karang Anyar", "Pontang", "Sabrang", "Sumberejo", "Tegalsari"],
+                "Arjasa": ["Arjasa", "Biting", "Candijati", "Darsono", "Kamal", "Kemuning Lor"],
+                "Bangsalsari": ["Badean", "Bangsalsari", "Banjarsari", "Curahkalong", "Gambirono", "Karangsono", "Langkap", "Petung", "Sukorejo", "Tisnogambar", "Tugusari"],
+                "Balung": ["Balung Kidul", "Balung Kulon", "Balung Lor", "Curahlele", "Gumelar", "Karangduren", "Karang Semanding", "Tutul"],
+                "Gumukmas": ["Bagorejo", "Gumukmas", "Karangrejo", "Kepanjen", "Mayangan", "Menampu", "Purwoasri", "Tembokrejo"],
+                "Jelbuk": ["Jelbuk", "Panduman", "Sucopangepok", "Sugerkidul", "Sukojember", "Sukowiryo"],
+                "Jenggawah": ["Jatisari", "Jenggawah", "Kemuningsari Kidul", "Cangkring", "Jatimulyo", "Kertonegoro", "Sruni", "Wonojati"],
+                "Jombang": ["Jombang", "Keting", "Ngampelrejo", "Padomasan", "Sarimulyo", "Wringinagung"],
+                "Kalisat": ["Ajung", "Gambiran", "Glagahwero", "Gumuksari", "Kalisat", "Patempuran", "Plalangan", "Sebanen", "Sukoreno", "Sumberjeruk", "Sumberkalong", "Sumberketempa"],
+                "Kaliwates": ["Jember Kidul", "Kaliwates", "Kebon Agung", "Kepatihan", "Mangli", "Sempusari", "Tegal Besar"],
+                "Kencong": ["Cakru", "Kencong", "Kraton", "Paseban", "Wonorejo"],
+                "Ledokombo": ["Karangpaiton", "Ledokombo", "Lembengan", "Slateng", "Sukogidri", "Sumberanget", "Sumberbulus", "Sumberlesung", "Sumbersalak", "Suren"],
+                "Mayang": ["Mayang", "Mrawan", "Seputih", "Sidomukti", "Sumberkejayan", "Tegalwaru", "Tegalrejo"],
+                "Mumbulsari": ["Karang Kedawung", "Kawangrejo", "Lampeji", "Lengkong", "Mumbulsari", "Suco", "Tamansari"],
+                "Panti": ["Glagahwero", "Kemiri", "Kemuningsari Lor", "Pakis", "Panti", "Serut", "Suci"],
+                "Pakusari": ["Bedadung", "Jatian", "Kertosari", "Pakusari", "Patemon", "Subo", "Sumberpinang"],
+                "Patrang": ["Banjarsengon", "Baratan", "Bintoro", "Gebang", "Jemberlor", "Jumerto", "Patrang", "Slawu"],
+                "Puger": ["Bagon", "Grenden", "Jambearum", "Kasiyan", "Kasiyan Timur", "Mlokorejo", "Mojomulyo", "Mojosari", "Puger Kulon", "Puger Wetan", "Wonosari", "Wringintelu"],
+                "Rambipuji": ["Curahmalang", "Gugut", "Kaliwining", "Nogosari", "Pecoro", "Rambigundam", "Rambipuji", "Rowotamtu"],
+                "Semboro": ["Pondokdalem", "Pondokjoyo", "Rejoagung", "Semboro", "Sidomekar", "Sidomulyo"],
+                "Silo": ["Garahan", "Harjomulyo", "Karangharjo", "Mulyorejo", "Pace", "Sempolan", "Sidomulyo", "Silo", "Sumberjati"],
+                "Sukorambi": ["Dukuhmencek", "Jubung", "Karangpring", "Klungkung", "Sukorambi"],
+                "Sukowono": ["Arjasa", "Balet Baru", "Dawuhanmangli", "Mojogemi", "Pocangan", "Sukokerto", "Sukorejo", "Sukosari", "Sukowono", "Sumberwringin", "Sumberdanti", "Sumberwaru"],
+                "Sumberbaru": ["Gelang", "Jambesari", "Jamintoro", "Jatiroto", "Kaliglagah", "Karangbayat", "Pringgowirawan", "Rowotengah", "Sumberagung", "Yosorati"],
+                "Sumberjambe": ["Cumedak", "Gunungmalang", "Jambearum", "Plerean", "Pringgondani", "Randuagung", "Rowosari", "Sumberjambe", "Sumberpakem"],
+                "Sumbersari": ["Antirogo", "Karangrejo", "Kebonsari", "Kranjingan", "Sumbersari", "Tegalgede", "Wirolegi"],
+                "Tanggul": ["Darungan", "Klatakan", "Kramat Sukoharjo", "Manggisan", "Patemon", "Selodakon", "Tanggul Kulon", "Tanggul Wetan"],
+                "Tempurejo": ["Andongrejo", "Curahnongko", "Curahtakir", "Pondokrejo", "Sidodadi", "Sanenrejo", "Tempurejo", "Wonoasri"],
+                "Umbulsari": ["Gadingrejo", "Gunungsari", "Mundurejo", "Paleran", "Sidorejo", "Sukoreno", "Tanjungsari", "Tegalwangi", "Umbulrejo", "Umbulsari"],
+                "Wuluhan": ["Ampel", "Dukuhdempok", "Glundengan", "Kesilir", "Lojejer", "Tamansari", "Tanjungrejo"]
+            };
+
             const kecamatanSelect = document.getElementById('alamatKecamatan');
             const desaSelect = document.getElementById('alamatDesa');
 
             if (kecamatanSelect) {
-                // 1. Isi Dropdown Kecamatan
                 const kecamatanList = Object.keys(dataJember).sort();
                 kecamatanList.forEach(kecamatan => {
                     kecamatanSelect.add(new Option(kecamatan, kecamatan));
                 });
 
-                // 2. Tambahkan Event Listener
                 kecamatanSelect.addEventListener('change', () => {
                     const selectedKecamatan = kecamatanSelect.value;
-                    desaSelect.innerHTML = ''; // Kosongkan pilihan lama
-
+                    desaSelect.innerHTML = '';
                     if (selectedKecamatan) {
-                        // Jika Kecamatan dipilih, aktifkan dropdown Desa
                         desaSelect.disabled = false;
                         desaSelect.add(new Option('Pilih Kelurahan/Desa...', ''));
-                        
-                        const desaList = dataJember[selectedKecamatan].sort(); // Ambil & urutkan desa
+                        const desaList = dataJember[selectedKecamatan].sort();
                         desaList.forEach(desa => {
                             desaSelect.add(new Option(desa, desa));
                         });
                     } else {
-                        // Jika tidak ada Kecamatan dipilih, nonaktifkan
                         desaSelect.disabled = true;
                         desaSelect.add(new Option('Pilih Kecamatan Dulu...', ''));
                     }
                 });
             }
-        });
-        // ===========================================
-        // AKHIR JAVASCRIPT BARU
-        // ===========================================
+
+            // ===========================================
+            // DROPDOWN SEKTOR/SUBSEKTOR
+            // ===========================================
+            const dataSektor = {
+                "Perumahan dan Permukiman": ["Perumahan", "Prasarana Lingkungan Perumahan", "Prasarana Sosial Masyarakat"],
+                "Infrastruktur Pembangunan": ["Transportasi Darat, Laut, dan Udara", "Energi", "Pos dan Telekomunikasi", "Air dan Sanitasi", "Pemerintahan Umum"],
+                "Ekonomi": ["Pertanian dan Peternakan", "Perkebunan", "Perikanan", "Industri Kecil dan Menengah", "Perdagangan", "Pariwisata", "Perbankan"],
+                "Sosial dan Kemanusiaan": ["Kesehatan", "Pendidikan", "Agama", "Budaya", "Perlindungan Sosial", "Kependudukan", "Ketahanan Pangan", "Keamanan dan Ketertiban"],
+                "Lintas Sektor": ["Tata Kelola Pemerintahan", "Lingkungan Hidup", "Gender"]
+            };
+
+            const sektorSelect = document.getElementById('sektor');
+            const subSektorSelect = document.getElementById('subSektor');
+
+            if (sektorSelect) {
+                sektorSelect.addEventListener('change', () => {
+                    const selectedSektor = sektorSelect.value;
+                    subSektorSelect.innerHTML = '';
+                    if (selectedSektor && dataSektor[selectedSektor]) {
+                        subSektorSelect.disabled = false;
+                        subSektorSelect.add(new Option('Pilih Sub Sektor...', ''));
+                        const subSektorList = dataSektor[selectedSektor];
+                        subSektorList.forEach(subSektor => {
+                            subSektorSelect.add(new Option(subSektor, subSektor));
+                        });
+                    } else {
+                        subSektorSelect.disabled = true;
+                        subSektorSelect.add(new Option('Pilih Sektor Dulu...', ''));
+                    }
+                });
+            }
+
+        }); // --- AKHIR DARI DOMContentLoaded ---
 
 
         // ===========================================
-        // JAVASCRIPT UNTUK GEOLOCATION (GPS)
+        // GEOLOCATION (di luar DOMContentLoaded)
         // ===========================================
         const getLocationBtn = document.getElementById('getLocationBtn');
         const locationStatus = document.getElementById('locationStatus');
@@ -811,23 +691,20 @@
         function getLocation() {
             if (navigator.geolocation) {
                 getLocationBtn.disabled = true;
-                locationStatus.innerHTML = '<i style="color:#007bff;">Mencari lokasi akurat... Harap tunggu.</i>';
+                locationStatus.innerHTML = '<span class="text-primary">Mencari lokasi akurat... Harap tunggu.</span>';
                 var options = { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 };
                 navigator.geolocation.getCurrentPosition(showPosition, showError, options);
             } else {
-                locationStatus.innerHTML = '<b style="color:red;">Geolocation tidak didukung browser ini.</b>';
+                locationStatus.innerHTML = '<b class="text-red-500">Geolocation tidak didukung browser ini.</b>';
             }
         }
 
         function showPosition(position) {
-            // Menggunakan replace() untuk mengubah titik jadi KOMA
             const lat = position.coords.latitude.toFixed(7).replace('.', ',');
             const lon = position.coords.longitude.toFixed(7).replace('.', ',');
-            
             latInput.value = lat;
             lonInput.value = lon;
-            
-            locationStatus.innerHTML = `<b style="color:green;">✅ Lokasi berhasil terdeteksi!</b><br><small>Lat: ${lat}, Lon: ${lon}</small>`;
+            locationStatus.innerHTML = `<b class="text-green-600">✅ Lokasi berhasil terdeteksi!</b><br><small>`;
             getLocationBtn.disabled = false;
         }
 
@@ -840,30 +717,24 @@
             } else if (error.code == error.TIMEOUT) {
                 message = "Waktu permintaan habis. Coba lagi di tempat dengan sinyal lebih baik.";
             }
-            locationStatus.innerHTML = `<b style="color:red;">${message}</b>`;
+            locationStatus.innerHTML = `<b class="text-red-500">${message}</b>`;
             getLocationBtn.disabled = false;
         }
 
-	function updateKerusakanVisibility(category, show) {
-            // Temukan semua pertanyaan yang relevan
+        // ===========================================
+        // LIST BUILDER (di luar DOMContentLoaded)
+        // ===========================================
+	    function updateKerusakanVisibility(category, show) {
             const allQuestions = document.querySelectorAll(`.kerusakan-fisik-group[data-category="${category}"]`);
-            
             allQuestions.forEach(question => {
                 question.style.display = show ? 'block' : 'none';
-                
-                // Jika disembunyikan, reset juga nilainya
                 if (!show) {
                     const select = question.querySelector('select');
-                    if (select) {
-                        select.value = '';
-                    }
+                    if (select) select.value = '';
                 }
             });
         }
        
-        // ===========================================
-        // JAVASCRIPT UNTUK LIST BUILDER
-        // ===========================================
         function setupListBuilder(prefix) {
             const selectEl = document.getElementById(prefix + 'Select');
             const lainnyaInputEl = document.getElementById(prefix + 'LainnyaInput');
@@ -885,14 +756,12 @@
                 }
             });
 
-	    lainnyaInputEl.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-            // 1. Hentikan aksi default (submit form)
-            event.preventDefault(); 
-            // 2. Jalankan aksi klik tombol "Tambahkan"
-            addButtonEl.click(); 
+	        lainnyaInputEl.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); 
+                    addButtonEl.click(); 
                 }
-   	    });
+   	        });
 
             addButtonEl.addEventListener('click', () => {
                 let valueToAdd = '';
@@ -922,31 +791,22 @@
                 const li = document.createElement('li');
                 li.dataset.value = valueToAdd; 
                 li.dataset.type = type; 
+                li.innerHTML = `
+                    <span class="truncate">${valueToAdd}</span>
+                    <span class="remove-item" title="Hapus">&times;</span>
+                `;
 
-                const textNode = document.createTextNode(valueToAdd);
-                const removeButton = document.createElement('span');
-                removeButton.className = 'remove-item';
-                removeButton.innerHTML = '&times;';
-                const contentWrapper = document.createElement('div');
-                contentWrapper.appendChild(textNode);
-                const buttonWrapper = document.createElement('div');
-                buttonWrapper.appendChild(removeButton);
-                li.appendChild(contentWrapper);
-                li.appendChild(buttonWrapper);
-
-                removeButton.addEventListener('click', () => {
+                li.querySelector('.remove-item').addEventListener('click', () => {
                     li.remove();
                     updateHiddenInputs(prefix);
-		    if (prefix === 'bagianKerusakan') {
-                        // Saat item dihapus, sembunyikan pertanyaannya
+		            if (prefix === 'bagianKerusakan') {
                         updateKerusakanVisibility(li.dataset.value, false);
                     } 
                 });
 
                 listContainerEl.appendChild(li);
                 updateHiddenInputs(prefix);
-		if (prefix === 'bagianKerusakan') {
-                    // Saat item ditambah, tampilkan pertanyaannya
+		        if (prefix === 'bagianKerusakan') {
                     updateKerusakanVisibility(valueToAdd, true);
                 }
 
@@ -964,15 +824,12 @@
             
             if (prefix === 'bagianKerusakan') {
                 const allValues = [];
-                allItems.forEach(li => {
-                    allValues.push(li.dataset.value);
-                });
+                allItems.forEach(li => { allValues.push(li.dataset.value); });
                 document.getElementById('bagianKerusakan').value = allValues.join(', ');
             
             } else {
                 const predefinedValues = [];
                 const lainnyaValues = [];
-
                 allItems.forEach(li => {
                     if (li.dataset.type === 'predefined') {
                         predefinedValues.push(li.dataset.value);
@@ -1005,95 +862,83 @@
         setupListBuilder('bagianKerusakan');
         
         // ===========================================
-        // --- Logika Submit Form ---
+        // SUBMIT FORM (di luar DOMContentLoaded)
         // ===========================================
-
         form.addEventListener('submit', handleFormSubmit);
 
-        // --- GANTI FUNGSI LAMA ANDA DENGAN YANG INI ---
-async function handleFormSubmit(e) {
-    e.preventDefault();
+        async function handleFormSubmit(e) {
+            e.preventDefault();
 
-    const namaKK = document.getElementById('namaKK').value;
-    const alamatDesa = document.getElementById('alamatDesa').value;
-    if (!namaKK && !alamatDesa) {
-        if (!confirm('Nama KK dan Desa masih kosong. Yakin ingin mengirim laporan kosong?')) {
-            return; 
+            const namaKK = document.getElementById('namaKK').value;
+            const alamatDesa = document.getElementById('alamatDesa').value;
+            if (!namaKK && !alamatDesa) {
+                if (!confirm('Nama Kepala Keluarga dan Desa masih kosong. Yakin ingin mengirim laporan kosong?')) {
+                    return; 
+                }
+            }
+
+            loadingOverlay.style.display = 'flex';
+            submitButton.disabled = true;
+            statusMessage.style.display = 'none';
+
+            try {
+                const formData = await createFormDataObject();
+
+                if (formData.filesDokumentasi.length > 8) {
+                    throw new Error("Gagal: Anda hanya dapat meng-upload maksimal 8 file dokumentasi.");
+                }
+
+                await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(formData),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                });
+
+                showStatus('Data Anda telah dikirim!', 'sukses');
+                form.reset();
+                
+                // Reset semua list
+                if(document.getElementById('personilListContainer')) document.getElementById('personilListContainer').innerHTML = '';
+                if(document.getElementById('unsurListContainer')) document.getElementById('unsurListContainer').innerHTML = '';
+                if(document.getElementById('bagianKerusakanListContainer')) document.getElementById('bagianKerusakanListContainer').innerHTML = '';
+                if(document.getElementById('locationStatus')) document.getElementById('locationStatus').innerHTML = ''; 
+                
+                updateHiddenInputs('personil'); 
+                updateHiddenInputs('unsur');
+                updateHiddenInputs('bagianKerusakan');
+
+	            document.querySelectorAll('.kerusakan-fisik-group').forEach(q => {
+                    q.style.display = 'none';
+                });
+
+                // Reset dropdown desa
+                const desaSelect = document.getElementById('alamatDesa');
+                if (desaSelect) {
+                    desaSelect.innerHTML = '<option value="">Pilih Kecamatan Dulu...</option>';
+                    desaSelect.disabled = true;
+                }
+                // Reset dropdown sub sektor
+                const subSektorSelect = document.getElementById('subSektor');
+                if (subSektorSelect) {
+                    subSektorSelect.innerHTML = '<option value="">Pilih Sektor Dulu...</option>';
+                    subSektorSelect.disabled = true;
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus(`Terjadi Gagal (Lokal): ${error.message}`, 'gagal');
+            } finally {
+                loadingOverlay.style.display = 'none';
+                submitButton.disabled = false;
+            }
         }
-    }
-
-    loadingOverlay.style.display = 'flex';
-    submitButton.disabled = true;
-    statusMessage.style.display = 'none';
-
-    try {
-        const formData = await createFormDataObject();
-
-        if (formData.filesDokumentasi.length > 8) {
-            throw new Error("Gagal: Anda hanya dapat meng-upload maksimal 8 file dokumentasi.");
-        }
-
-        // ===============================================
-        // INI ADALAH PERUBAHAN DARI SOLUSI ANDA
-        // ===============================================
-        await fetch(GAS_WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors', // <-- 1. TAMBAHKAN MODE 'no-cors'
-            body: JSON.stringify(formData),
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8', // <-- 2. TETAP GUNAKAN text/plain
-            },
-        });
-        // ===============================================
-        // AKHIR PERUBAHAN
-        // ===============================================
-
-        // KARENA 'no-cors' TIDAK BISA MEMBACA BALASAN,
-        // KITA HARUS BERASUMSI PENGIRIMAN BERHASIL.
-        
-        // Kita tidak bisa lagi memeriksa 'result.status' dari server.
-        // Kita langsung tampilkan sukses dan reset form.
-        showStatus('Data Anda telah dikirim! (Mode: no-cors)', 'sukses');
-        form.reset();
-        
-        // Reset semua list
-        if(document.getElementById('personilListContainer')) document.getElementById('personilListContainer').innerHTML = '';
-        if(document.getElementById('unsurListContainer')) document.getElementById('unsurListContainer').innerHTML = '';
-        if(document.getElementById('bagianKerusakanListContainer')) document.getElementById('bagianKerusakanListContainer').innerHTML = '';
-        if(document.getElementById('locationStatus')) document.getElementById('locationStatus').innerHTML = ''; 
-        // Update input tersembunyi jadi kosong
-        updateHiddenInputs('personil'); 
-        updateHiddenInputs('unsur');
-        updateHiddenInputs('bagianKerusakan');
-
-	    document.querySelectorAll('.kerusakan-fisik-group').forEach(q => {
-                        q.style.display = 'none';
-                    });
-
-        // Reset dropdown desa
-        const desaSelect = document.getElementById('alamatDesa');
-        if (desaSelect) {
-            desaSelect.innerHTML = '<option value="">Pilih Kecamatan Dulu...</option>';
-            desaSelect.disabled = true;
-        }
-
-    } catch (error) {
-        // Error ini kemungkinan besar adalah error JARINGAN, 
-        // BUKAN error balasan dari server.
-        console.error('Error:', error);
-        showStatus(`Terjadi Gagal (Lokal): ${error.message}`, 'gagal');
-    } finally {
-        loadingOverlay.style.display = 'none';
-        submitButton.disabled = false;
-    }
-}
-// --- AKHIR PENGGANTIAN FUNGSI ---
 
         async function createFormDataObject() {
             const formData = {};
             formData.mode = "baru";
 
-            // Kumpulkan Data Teks, Angka, dan Pilihan
+            // Kumpulkan Data (ID tetap sama)
             formData.bencana = document.getElementById('bencana').value;
             formData.jenisBencana = document.getElementById('jenisBencana').value;
             formData.sektor = document.getElementById('sektor').value;
@@ -1134,7 +979,6 @@ async function handleFormSubmit(e) {
             formData.terpal3x4 = document.getElementById('terpal3x4').value;
             formData.terpal5x6 = document.getElementById('terpal5x6').value;
             
-            // Data dari list builder
             formData.bagianKerusakan = document.getElementById('bagianKerusakan').value;
             formData.personilyangBerangkat = document.getElementById('personilyangBerangkat').value;
             formData.personilLainnya = document.getElementById('personilLainnya').value;
@@ -1148,6 +992,10 @@ async function handleFormSubmit(e) {
             } else {
                 formData.fileDisposisi = null;
             }
+
+            // (Perubahan: tambahkan fileSerahTerima dan fileMonitoring - sesuaikan ID jika perlu)
+            // formData.fileSerahTerima = ...
+            // formData.fileMonitoring = ...
 
             const dokumentasiFiles = document.getElementById('filesDokumentasi').files;
             formData.filesDokumentasi = []; 
@@ -1175,29 +1023,19 @@ async function handleFormSubmit(e) {
                 reader.readAsDataURL(file);
             });
         }
-
-        // Fungsi ini tidak terpakai tapi biarkan saja
-        function getCheckboxValues(name) {
-            const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
-            const values = Array.from(checkboxes).map(cb => cb.value);
-            return values.join(', '); 
-        }
         
         function showStatus(message, type) {
             statusMessage.textContent = message;
-            statusMessage.className = type;
+            if (type === 'sukses') {
+                statusMessage.className = 'p-4 rounded-lg mb-6 text-center font-medium bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300';
+            } else {
+                statusMessage.className = 'p-4 rounded-lg mb-6 text-center font-medium bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300';
+            }
             statusMessage.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
 
