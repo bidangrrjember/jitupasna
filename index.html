@@ -889,41 +889,65 @@
                 }
 
                 await fetch(GAS_WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(formData),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                });
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(formData),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            });
 
-                showStatus('Data Anda telah dikirim!', 'sukses');
-                form.reset();
-                
-                // Reset semua list
-                if(document.getElementById('personilListContainer')) document.getElementById('personilListContainer').innerHTML = '';
-                if(document.getElementById('unsurListContainer')) document.getElementById('unsurListContainer').innerHTML = '';
-                if(document.getElementById('bagianKerusakanListContainer')) document.getElementById('bagianKerusakanListContainer').innerHTML = '';
-                if(document.getElementById('locationStatus')) document.getElementById('locationStatus').innerHTML = ''; 
-                
-                updateHiddenInputs('personil'); 
-                updateHiddenInputs('unsur');
-                updateHiddenInputs('bagianKerusakan');
+            // 1. Reset form dulu (pindahkan ke atas)
+            form.reset();
 
-	            document.querySelectorAll('.kerusakan-fisik-group').forEach(q => {
-                    q.style.display = 'none';
-                });
+            // Reset semua list
+            if(document.getElementById('personilListContainer')) document.getElementById('personilListContainer').innerHTML = '';
+            if(document.getElementById('unsurListContainer')) document.getElementById('unsurListContainer').innerHTML = '';
+            if(document.getElementById('bagianKerusakanListContainer')) document.getElementById('bagianKerusakanListContainer').innerHTML = '';
+            if(document.getElementById('locationStatus')) document.getElementById('locationStatus').innerHTML = ''; 
 
-                // Reset dropdown desa
-                const desaSelect = document.getElementById('alamatDesa');
-                if (desaSelect) {
-                    desaSelect.innerHTML = '<option value="">Pilih Kecamatan Dulu...</option>';
-                    desaSelect.disabled = true;
+            updateHiddenInputs('personil'); 
+            updateHiddenInputs('unsur');
+            updateHiddenInputs('bagianKerusakan');
+
+            document.querySelectorAll('.kerusakan-fisik-group').forEach(q => {
+                q.style.display = 'none';
+            });
+
+            // Reset dropdown desa
+            const desaSelect = document.getElementById('alamatDesa');
+            if (desaSelect) {
+                desaSelect.innerHTML = '<option value="">Pilih Kecamatan Dulu...</option>';
+                desaSelect.disabled = true;
+            }
+            // Reset dropdown sub sektor
+            const subSektorSelect = document.getElementById('subSektor');
+            if (subSektorSelect) {
+                subSektorSelect.innerHTML = '<option value="">Pilih Sektor Dulu...</option>';
+                subSektorSelect.disabled = true;
+            }
+
+            // 2. Mulai Logika Countdown
+            let countdown = 3; // Mulai dari 3 detik
+            const redirectUrl = "https://bidangrrjember.github.io/peta-bencana-jember/";
+
+            // 3. Tampilkan pesan awal
+            showStatus(`Data Anda telah dikirim! Mengalihkan kembali ke peta dalam ${countdown} detik...`, 'sukses');
+
+            // 4. Buat interval yang berjalan setiap 1 detik
+            const countdownInterval = setInterval(() => {
+                countdown--; // Kurangi 1 detik
+
+                if (countdown > 0) {
+                    // Jika masih ada waktu, update pesan
+                    showStatus(`Data Anda telah dikirim! Mengalihkan kembali ke peta dalam ${countdown} detik...`, 'sukses');
+                } else {
+                    // Waktu habis, hentikan interval dan redirect
+                    clearInterval(countdownInterval);
+                    showStatus(`Data Anda telah dikirim! Mengalihkan...`, 'sukses'); // Pesan final
+                    window.location.href = redirectUrl;
                 }
-                // Reset dropdown sub sektor
-                const subSektorSelect = document.getElementById('subSektor');
-                if (subSektorSelect) {
-                    subSektorSelect.innerHTML = '<option value="">Pilih Sektor Dulu...</option>';
-                    subSektorSelect.disabled = true;
-                }
+            }, 1000); // 1000ms = 1 detik
+
+            // --- AKHIR DARI PERUBAHAN ---
 
             } catch (error) {
                 console.error('Error:', error);
