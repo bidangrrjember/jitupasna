@@ -290,6 +290,15 @@
                         </button>
                         <div id="locationStatus" class="text-sm text-center mt-2 text-gray-600 dark:text-gray-400"></div>
                     </div>
+
+			<div class="form-group">
+    <button type="button" id="setTimestampBtn" class="form-button-blue">
+        <span class="material-symbols-outlined">schedule</span> Set Waktu Asesmen (Manual)
+    </button>
+    <div id="timestampStatus" class="text-sm text-center mt-2 text-gray-600 dark:text-gray-400"></div>
+    <input type="hidden" id="manualTimestamp" name="manualTimestamp">
+</div>
+
                     <div class="form-group">
                         <label for="nomoryangBisaDihubungi" class="form-label">Nomor yang Bisa Dihubungi</label>
                         <input type="tel" id="nomoryangBisaDihubungi" name="nomoryangBisaDihubungi" placeholder="Contoh: 08123456789">
@@ -561,7 +570,7 @@
         // -----------------------------------------------------------------
         // (WAJIB) GANTI DENGAN URL WEB APP ANDA
         // -----------------------------------------------------------------
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxXlTqsZ1nK1V6QTnKGmcUzY6AILKurE9XukfxdgeIw8ndGdrear75vpgcKgDrV7q4M/exec"; // <-- GANTI INI
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyFSg1Ua65dmoDfd7L-yFI4deL3rPr1PGZvRZ6i8e63UiiwVAIQyPJBbldO2dqyqUV8/exec"; // <-- GANTI INI
 
 
         // --- Variabel Global ---
@@ -720,6 +729,43 @@
             locationStatus.innerHTML = `<b class="text-red-500">${message}</b>`;
             getLocationBtn.disabled = false;
         }
+
+// ===========================================
+        // MANUAL TIMESTAMP
+        // ===========================================
+        const setTimestampBtn = document.getElementById('setTimestampBtn');
+        const timestampStatus = document.getElementById('timestampStatus');
+        const manualTimestampInput = document.getElementById('manualTimestamp');
+
+        if(setTimestampBtn) { // Pastikan elemen ada
+            setTimestampBtn.addEventListener('click', setManualTimestamp);
+        }
+
+        function setManualTimestamp() {
+            const now = new Date();
+            // Simpan sebagai ISO string, format standar universal
+            manualTimestampInput.value = now.toISOString(); 
+            
+            // Format untuk tampilan (HH:MM:SS)
+            const displayTime = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            timestampStatus.innerHTML = `<b class="text-green-600">✅ Waktu Asesmen di-set: ${displayTime}</b><br><small>`;
+            
+            // Beri efek tombol ditekan
+            setTimestampBtn.disabled = true;
+            setTimestampBtn.innerHTML = '<span class="material-symbols-outlined">check</span> Waktu Disimpan';
+            
+            // Aktifkan lagi setelah 10 detik agar bisa di-reset jika salah
+            setTimeout(() => {
+                setTimestampBtn.disabled = false;
+                setTimestampBtn.innerHTML = '<span class="material-symbols-outlined">schedule</span> Set Ulang Waktu Asesmen';
+            }, 10000);
+        }
+        // === ⬆️ AKHIR BLOK JAVASCRIPT BARU ⬆️ ===
 
         // ===========================================
         // LIST BUILDER (di luar DOMContentLoaded)
@@ -904,6 +950,9 @@
             if(document.getElementById('bagianKerusakanListContainer')) document.getElementById('bagianKerusakanListContainer').innerHTML = '';
             if(document.getElementById('locationStatus')) document.getElementById('locationStatus').innerHTML = ''; 
 
+	    if(document.getElementById('timestampStatus')) document.getElementById('timestampStatus').innerHTML = 'Tekan untuk set waktu sekarang';
+            if(document.getElementById('manualTimestamp')) document.getElementById('manualTimestamp').value = '';
+
             updateHiddenInputs('personil'); 
             updateHiddenInputs('unsur');
             updateHiddenInputs('bagianKerusakan');
@@ -978,6 +1027,7 @@
             formData.alamatKecamatan = document.getElementById('alamatKecamatan').value;
             formData.latitude = document.getElementById('latitude').value;
             formData.longitude = document.getElementById('longitude').value;
+	    formData.manualTimestamp = document.getElementById('manualTimestamp').value;
             formData.nomoryangBisaDihubungi = document.getElementById('nomoryangBisaDihubungi').value;
             formData.ukuranPanjang = document.getElementById('ukuranPanjang').value;
             formData.ukuranLebar = document.getElementById('ukuranLebar').value;
@@ -1062,7 +1112,3 @@
     </script>
 </body>
 </html>
-
-
-
-
