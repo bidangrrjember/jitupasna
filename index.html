@@ -140,6 +140,14 @@
                     hover:file:bg-primary/20 dark:hover:file:bg-primary/30;
         }
 
+	.animate-fade-in {
+   	 	animation: fadeIn 0.3s ease-in-out;
+	}
+	@keyframes fadeIn {
+    		from { opacity: 0; transform: translateY(-5px); }
+    		to { opacity: 1; transform: translateY(0); }
+	}
+
         /* --- AKHIR KODE TAMBAHAN --- */	
 
     </style>
@@ -291,12 +299,41 @@
                         <div id="locationStatus" class="text-sm text-center mt-2 text-gray-600 dark:text-gray-400"></div>
                     </div>
 
-			<div class="form-group">
-    <button type="button" id="setTimestampBtn" class="form-button-blue">
-        <span class="material-symbols-outlined">schedule</span> Set Waktu Asesmen (Manual)
-    </button>
-    <div id="timestampStatus" class="text-sm text-center mt-2 text-gray-600 dark:text-gray-400"></div>
-    <input type="hidden" id="manualTimestamp" name="manualTimestamp">
+			<div class="form-card mt-4 mb-4"> 
+    <div class="form-header">Waktu Kejadian</div>
+    
+    <div class="flex items-center justify-between py-2">
+        <div class="flex flex-col">
+            <span id="labelWaktu" class="font-medium text-text-light dark:text-text-dark">Kejadian Saat Ini</span>
+            <span id="descWaktu" class="text-xs text-gray-500">Waktu akan tercatat otomatis saat kirim.</span>
+        </div>
+
+        <label class="relative inline-flex items-center cursor-pointer">
+    <input type="checkbox" id="toggleWaktu" class="sr-only peer">
+    
+    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 
+                peer-checked:bg-primary transition-colors duration-200 ease-in-out
+                
+                after:content-[''] 
+                after:absolute 
+                after:top-[2px] 
+                after:left-[2px] 
+                after:bg-white 
+                after:rounded-full 
+                after:h-5 
+                after:w-5 
+                after:transition-all 
+                after:shadow-sm
+                
+                peer-checked:after:translate-x-full">
+    </div>
+</label>
+    </div>
+
+    <div id="containerManualWaktu" class="hidden mt-4 pt-4 border-t border-border-light dark:border-border-dark animate-fade-in">
+        <label for="inputWaktuManual" class="form-label">Pilih Tanggal & Jam Lampau</label>
+        <input type="datetime-local" id="inputWaktuManual" class="w-full rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark p-2 text-text-light dark:text-text-dark">
+    </div>
 </div>
 
                     <div class="form-group">
@@ -907,6 +944,39 @@
         setupListBuilder('unsur');
         setupListBuilder('bagianKerusakan');
         
+	// ===========================================
+    // LOGIKA TOGGLE WAKTU (KEJADIAN LAMPAU)
+    // ===========================================
+    const toggleWaktu = document.getElementById('toggleWaktu');
+    const containerManualWaktu = document.getElementById('containerManualWaktu');
+    const labelWaktu = document.getElementById('labelWaktu');
+    const descWaktu = document.getElementById('descWaktu');
+    const inputWaktuManual = document.getElementById('inputWaktuManual');
+
+    toggleWaktu.addEventListener('change', function() {
+        if (this.checked) {
+            // Mode Masa Lampau (Aktif)
+            containerManualWaktu.classList.remove('hidden');
+            labelWaktu.textContent = "Kejadian Masa Lampau";
+            descWaktu.textContent = "Silakan atur tanggal dan jam kejadian.";
+            labelWaktu.classList.add('text-primary'); // Highlight warna
+            
+            // Set default value ke waktu sekarang agar user tinggal geser jamnya
+            if (!inputWaktuManual.value) {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // Koreksi timezone lokal
+                inputWaktuManual.value = now.toISOString().slice(0, 16);
+            }
+        } else {
+            // Mode Saat Ini (Default)
+            containerManualWaktu.classList.add('hidden');
+            labelWaktu.textContent = "Kejadian Saat Ini";
+            descWaktu.textContent = "Waktu akan tercatat otomatis saat kirim.";
+            labelWaktu.classList.remove('text-primary');
+            inputWaktuManual.value = ''; // Reset
+        }
+    });
+	
         // ===========================================
         // SUBMIT FORM (di luar DOMContentLoaded)
         // ===========================================
@@ -1027,7 +1097,23 @@
             formData.alamatKecamatan = document.getElementById('alamatKecamatan').value;
             formData.latitude = document.getElementById('latitude').value;
             formData.longitude = document.getElementById('longitude').value;
-	    formData.manualTimestamp = document.getElementById('manualTimestamp').value;
+	     
+	    // --- UPDATE LOGIKA WAKTU ---
+            const isManualMode = document.getElementById('toggleWaktu').checked;
+            
+            if (isManualMode) {
+                // Jika mode manual, ambil dari input datetime-local
+                const rawDate = document.getElementById('inputWaktuManual').value;
+                // Pastikan user sudah isi, kalau kosong paksa waktu sekarang
+                formData.manualTimestamp = rawDate ? new Date(rawDate).toISOString() : new Date().toISOString();
+            } else {
+                // Jika mode otomatis (saat ini), buat waktu sekarang
+                formData.manualTimestamp = new Date().toISOString();
+            }
+            // ---------------------------
+
+            formData.nomoryangBisaDihubungi = document.getElementById('nomoryangBisaDihubungi').value;
+	    
             formData.nomoryangBisaDihubungi = document.getElementById('nomoryangBisaDihubungi').value;
             formData.ukuranPanjang = document.getElementById('ukuranPanjang').value;
             formData.ukuranLebar = document.getElementById('ukuranLebar').value;
