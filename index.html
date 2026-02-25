@@ -48,6 +48,14 @@
 	    @apply select-none;
         }
 
+	.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         .form-card {
             /* Menerapkan efek frosted glass */
             @apply bg-card-light/80 dark:bg-card-dark/80 backdrop-blur-md
@@ -153,20 +161,6 @@
     </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-display">
-
-    <!-- Header Sederhana + Tombol Dark Mode + Efek Frosted Glass -->
-    <header class="sticky top-0 z-40 backdrop-blur-lg bg-card-light/75 dark:bg-card-dark/75 border-b border-border-light dark:border-border-dark shadow-sm">
-        <div class="p-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-primary flex items-center gap-2">
-                <span class="material-symbols-outlined">edit_document</span>
-                E-Form JITUPASNA
-            </h1>
-            <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 text-text-light dark:text-text-dark">
-                <span class="material-symbols-outlined dark:hidden">dark_mode</span>
-                <span class="material-symbols-outlined hidden dark:inline">light_mode</span>
-            </button>
-        </div>
-    </header>
 
     <!-- 
       LAYOUT BARU: 
@@ -520,7 +514,7 @@
 
             <!-- === KOLOM KANAN (STICKY) === -->
             <!-- 'top-24' (6rem) adalah untuk spasi di bawah header sticky -->
-            <div class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 self-start">
+            <div class="lg:col-span-1 space-y-6 lg:sticky lg:top-8 self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto no-scrollbar">
         
                 <div class="form-card">
                     <div class="form-header">Personil & Unsur Terlibat</div>
@@ -615,13 +609,6 @@
         const submitButton = document.getElementById('submitButton');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const statusMessage = document.getElementById('statusMessage');
-
-        // --- Dark Mode Toggle ---
-        const themeToggle = document.getElementById('theme-toggle');
-        const html = document.documentElement;
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-        });
 
         // --- Menggabungkan SEMUA skrip ke dalam SATU DOMContentLoaded ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -1284,12 +1271,3 @@ function readFileRaw(file) {
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
